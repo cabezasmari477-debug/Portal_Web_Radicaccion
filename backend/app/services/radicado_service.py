@@ -1,2 +1,10 @@
+contador = 1
+
 def generar_radicado():
-    return "RAD-2026-000001"
+    global contador
+
+    radicado = f"RAD-2026-{contador:06d}"
+
+    contador += 1
+
+    return radicado
