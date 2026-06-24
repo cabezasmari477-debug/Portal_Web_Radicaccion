@@ -5,8 +5,22 @@ from app.services.database import radicaciones
 from fastapi import UploadFile, File
 from app.services.documento_service import guardar_documento
 from app.models.estado import EstadoSolicitud
+from app.schemas.actualizar_estado import ActualizarEstado
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+
+    allow_origins=["*"],
+
+    allow_credentials=True,
+
+    allow_methods=["*"],
+
+    allow_headers=["*"],
+)
 
 @app.get("/")
 def inicio():
@@ -39,6 +53,28 @@ def obtener_radicacion(radicado: str):
 
         if solicitud["radicado"] == radicado:
             return solicitud
+
+    return {
+        "mensaje": "Radicación no encontrada"
+    }
+
+@app.put("/radicacion/{radicado}/estado")
+def actualizar_estado(
+    radicado: str,
+    datos: ActualizarEstado
+):
+
+    for solicitud in radicaciones:
+
+        if solicitud["radicado"] == radicado:
+
+            solicitud["estado"] = datos.estado
+
+            return {
+                "mensaje": "Estado actualizado correctamente",
+                "radicado": radicado,
+                "estado": datos.estado
+            }
 
     return {
         "mensaje": "Radicación no encontrada"
