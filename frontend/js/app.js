@@ -1,33 +1,3 @@
-function nextStep(current) {
-
-    document
-        .getElementById(`step${current}`)
-        .classList
-        .remove("active-step");
-
-    document
-        .getElementById(`step${current + 1}`)
-        .classList
-        .add("active-step");
-
-    document
-        .getElementById(`circle${current + 1}`)
-        .classList
-        .add("active");
-}
-
-function prevStep(current) {
-
-    document
-        .getElementById(`step${current}`)
-        .classList
-        .remove("active-step");
-
-    document
-        .getElementById(`step${current - 1}`)
-        .classList
-        .add("active-step");
-}
 
 function updateProgress(step){
 
