@@ -1,3 +1,4 @@
+const API = "http://127.0.0.1:8000";
 
 function updateProgress(step){
 
@@ -6,6 +7,58 @@ function updateProgress(step){
 
     progressText.innerHTML =
         `Paso ${step} de 4`;
+
+}
+
+async function cargarTiposProyecto() {
+
+    try {
+
+        const respuesta = await fetch(`${API}/tipos-proyecto`);
+        
+        const tipos = await respuesta.json();
+
+        const select = document.getElementById("tipoProyecto");
+
+        tipos.forEach(tipo => {
+
+            const option = document.createElement("option");
+
+            option.value = tipo;
+
+            option.textContent = tipo;
+
+            select.appendChild(option);
+
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+
+}
+
+async function cargarDocumentos() {
+
+    const tipo = document.getElementById("tipoProyecto").value;
+
+    if (!tipo) return;
+
+    try {
+
+        const respuesta = await fetch(`${API}/documentos/${encodeURIComponent(tipo)}`);
+
+        const documentos = await respuesta.json();
+
+        mostrarDocumentos(documentos);
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
 
 }
 
@@ -67,7 +120,7 @@ async function generarRadicado() {
     try {
 
         const response = await fetch(
-            "http://127.0.0.1:8000/radicacion",
+            `${API}/radicacion`,
             {
                 method: "POST",
 
@@ -183,4 +236,120 @@ function cargarResumen(){
             ${correo}
         </div>
         `;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    cargarTiposProyecto();
+
+    document
+        .getElementById("tipoProyecto")
+        .addEventListener("change", cargarDocumentos);
+
+});
+
+
+function mostrarDocumentos(documentos) {
+
+    const contenedor =
+        document.getElementById("contenedorDocumentos");
+
+    contenedor.innerHTML = "";
+
+    documentos.forEach(doc => {
+
+        contenedor.innerHTML += `
+
+        <div class="document-card">
+
+            <h4>📄 ${doc.nombre}</h4>
+
+            <p>
+
+                ${
+                    doc.obligatorio
+                    ? "Documento obligatorio"
+                    : "Documento opcional"
+                }
+
+            </p>
+
+            <input
+                type="file"
+                accept=".pdf">
+
+        </div>
+
+        `;
+
+    });
+
+    agregarTarjetaNuevoDocumento();
+
+}
+
+function agregarTarjetaNuevoDocumento(){
+
+    const contenedor =
+        document.getElementById("contenedorDocumentos");
+
+    contenedor.innerHTML += `
+
+    <div
+        class="document-card add-document"
+        onclick="mostrarFormularioNuevoDocumento()">
+
+        <h4>➕ Agregar documento adicional</h4>
+
+        <p>
+
+            Adjunte cualquier documento adicional
+            relacionado con el proyecto.
+
+        </p>
+
+    </div>
+
+    `;
+
+}
+
+function mostrarFormularioNuevoDocumento(){
+
+    const contenedor =
+        document.getElementById("contenedorDocumentos");
+
+    contenedor.innerHTML += `
+
+    <div
+        class="document-card"
+        id="nuevoDocumento">
+
+        <input
+            id="nombreDocumentoNuevo"
+            type="text"
+            placeholder="Nombre del documento">
+
+        <input
+            id="archivoDocumentoNuevo"
+            type="file"
+            accept=".pdf">
+
+        <button
+            onclick="guardarDocumentoNuevo()">
+
+            Guardar
+
+        </button>
+
+    </div>
+
+    `;
+
+}
+
+function guardarDocumentoNuevo(){
+
+    alert("En el siguiente paso guardaremos el documento.");
+
 }
