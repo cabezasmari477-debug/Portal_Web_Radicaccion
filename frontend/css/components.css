@@ -1,0 +1,289 @@
+/* =====================================================
+                TARJETAS
+===================================================== */
+
+.card{
+
+    background:white;
+
+    border-radius:var(--radius-lg);
+
+    box-shadow:var(--shadow-md);
+
+    padding:25px;
+
+}
+
+/* =====================================================
+                SIDEBAR
+===================================================== */
+
+.sidebar{
+
+    width:260px;
+
+    min-height:100vh;
+
+    background:var(--color-danger);
+
+    color:white;
+
+    padding:30px;
+
+}
+
+.sidebar img{
+
+    width:160px;
+
+    display:block;
+
+    margin:auto;
+
+    margin-bottom:40px;
+
+}
+
+.sidebar nav{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:10px;
+
+}
+
+.sidebar a{
+
+    padding:15px;
+
+    border-radius:var(--radius-md);
+
+    transition:var(--transition);
+
+}
+
+.sidebar a:hover{
+
+    background:#222;
+
+}
+
+.sidebar a.active{
+
+    background:var(--color-primary);
+
+    color:black;
+
+}
+
+/* =====================================================
+                STEPPER
+===================================================== */
+
+.steps{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:40px;
+
+}
+
+.step-container{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    gap:8px;
+
+}
+
+.step{
+
+    width:45px;
+
+    height:45px;
+
+    border-radius:50%;
+
+    background:var(--color-pending);
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-weight:bold;
+
+}
+
+.step.active{
+
+    background:var(--color-primary);
+
+}
+
+.line{
+
+    flex:1;
+
+    height:3px;
+
+    background:var(--color-border);
+
+    margin:0 10px;
+
+}
+
+/* =====================================================
+            TARJETAS DOCUMENTOS
+===================================================== */
+
+.document-card{
+
+    background:white;
+
+    border-radius:var(--radius-md);
+
+    border:1px solid var(--color-border);
+
+    padding:20px;
+
+    transition:var(--transition);
+
+}
+
+.document-card:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:var(--shadow-md);
+
+}
+
+.documents-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+
+    gap:20px;
+
+}
+
+/* =====================================================
+            BOTONES
+===================================================== */
+
+.buttons{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    margin-top:30px;
+
+}
+
+/* =====================================================
+            PANEL LATERAL
+===================================================== */
+
+.info-panel{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:20px;
+
+}
+
+.info-card{
+
+    background:white;
+
+    padding:20px;
+
+    border-radius:var(--radius-md);
+
+    box-shadow:var(--shadow-sm);
+
+}
+
+/* =====================================================
+            RESUMEN
+===================================================== */
+
+.summary-card{
+
+    background:white;
+
+    border-radius:var(--radius-md);
+
+    padding:20px;
+
+    box-shadow:var(--shadow-sm);
+
+}
+
+.summary-item{
+
+    padding:12px 0;
+
+    border-bottom:1px solid #ececec;
+
+}
+
+/* =====================================================
+            BADGES
+===================================================== */
+
+.badge{
+
+    display:inline-block;
+
+    padding:8px 14px;
+
+    border-radius:20px;
+
+    font-size:14px;
+
+    font-weight:bold;
+
+}
+
+.badge-warning{
+
+    background:var(--color-warning);
+
+}
+
+.badge-success{
+
+    background:var(--color-success);
+
+}
+
+.badge-pending{
+
+    background:var(--color-pending);
+
+}
+
+.badge-danger{
+
+    background:var(--color-danger);
+
+    color:white;
+
+}

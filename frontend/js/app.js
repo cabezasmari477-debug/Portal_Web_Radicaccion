@@ -1,5 +1,13 @@
 const API = "http://127.0.0.1:8000";
 
+let documentosProyecto = {
+
+    obligatorios: [],
+
+    adicionales: []
+
+};
+
 function updateProgress(step){
 
     const progressText =
@@ -149,6 +157,7 @@ async function generarRadicado() {
 
         const data =
             await response.json();
+            await subirDocumentos(data.radicado);
 
         document
             .getElementById(
@@ -182,6 +191,52 @@ async function generarRadicado() {
     catch(error){
 
         console.error(error);
+
+    }
+
+}
+
+async function subirDocumentos(radicado){
+
+    const todosLosDocumentos = [
+
+        ...documentosProyecto.obligatorios,
+
+        ...documentosProyecto.adicionales
+
+    ];
+
+    for(const documento of todosLosDocumentos){
+
+        const formData = new FormData();
+
+        formData.append(
+            "archivo",
+            documento.archivo
+        );
+
+        formData.append(
+            "nombre",
+            documento.nombre
+        );
+
+        const respuesta = await fetch(
+
+            `${API}/documentos?radicado=${radicado}`,
+
+            {
+
+                method:"POST",
+
+                body:formData
+
+            }
+
+        );
+
+        const resultado = await respuesta.json();
+
+        console.log(resultado);
 
     }
 
@@ -275,14 +330,56 @@ function mostrarDocumentos(documentos) {
             </p>
 
             <input
-                type="file"
-                accept=".pdf">
+    type="file"
+    accept=".pdf"
+    onchange="guardarDocumentoObligatorio(event,'${doc.nombre}')">
 
         </div>
 
         `;
 
     });
+
+}
+
+function guardarDocumentoObligatorio(event, nombreDocumento){
+
+    const archivo = event.target.files[0];
+
+    if(!archivo){
+
+        return;
+
+    }
+
+    const existente =
+        documentosProyecto.obligatorios.find(
+
+            d => d.nombre === nombreDocumento
+
+        );
+
+    if(existente){
+
+        existente.archivo = archivo;
+
+    }
+
+    else{
+
+        documentosProyecto.obligatorios.push({
+
+            nombre: nombreDocumento,
+
+            archivo: archivo
+
+        });
+
+    }
+
+    console.log(documentosProyecto);
+
+
 
     agregarTarjetaNuevoDocumento();
 
@@ -314,42 +411,163 @@ function agregarTarjetaNuevoDocumento(){
 
 }
 
-function mostrarFormularioNuevoDocumento(){
+function mostrarFormularioNuevoDocumento() {
 
-    const contenedor =
-        document.getElementById("contenedorDocumentos");
+    // Evitar abrir varios formularios
+    if (document.getElementById("nuevoDocumento")) {
+        return;
+    }
 
-    contenedor.innerHTML += `
+    const tarjetaAgregar =
+        document.querySelector(".add-document");
 
-    <div
-        class="document-card"
-        id="nuevoDocumento">
+    const formulario = document.createElement("div");
+
+    formulario.className = "document-card";
+
+    formulario.id = "nuevoDocumento";
+
+    formulario.innerHTML = `
+
+        <h4>Nuevo documento</h4>
 
         <input
-            id="nombreDocumentoNuevo"
             type="text"
+            id="nombreDocumentoNuevo"
             placeholder="Nombre del documento">
 
         <input
-            id="archivoDocumentoNuevo"
             type="file"
+            id="archivoDocumentoNuevo"
             accept=".pdf">
 
-        <button
-            onclick="guardarDocumentoNuevo()">
+        <div class="buttons">
 
-            Guardar
+            <button onclick="guardarDocumentoNuevo()">
+                Guardar
+            </button>
 
-        </button>
+            <button onclick="cancelarDocumentoNuevo()">
+                Cancelar
+            </button>
 
-    </div>
+        </div>
 
     `;
 
-}
-
-function guardarDocumentoNuevo(){
-
-    alert("En el siguiente paso guardaremos el documento.");
+    tarjetaAgregar.before(formulario);
 
 }
+
+function cancelarDocumentoNuevo() {
+
+    document
+        .getElementById("nuevoDocumento")
+        ?.remove();
+
+}
+
+function guardarDocumentoNuevo() {
+
+    const nombre =
+        document
+        .getElementById("nombreDocumentoNuevo")
+        .value
+        .trim();
+
+    const archivo =
+        document
+        .getElementById("archivoDocumentoNuevo")
+        .files[0];
+
+    if (!nombre) {
+
+        alert("Ingrese el nombre del documento.");
+
+        return;
+
+    }
+
+    if (!archivo) {
+
+        alert("Seleccione un archivo.");
+
+        return;
+
+    }
+
+    let documentosProyecto = {
+
+    obligatorios: [],
+
+    adicionales: []
+
+    };
+
+    documentosProyecto.adicionales.push({
+
+    nombre: nombre,
+
+    archivo: archivo
+
+});
+
+    document
+        .getElementById("nuevoDocumento")
+        .remove();
+
+    crearTarjetaDocumento(nombre, archivo.name);
+
+}
+
+function crearTarjetaDocumento(nombre, archivo) {
+
+    const tarjeta = document.createElement("div");
+
+    tarjeta.className = "document-card documento-extra";
+
+    tarjeta.innerHTML = `
+
+        <h4>📄 ${nombre}</h4>
+
+        <p>${archivo}</p>
+
+        <button
+            class="btn-eliminar">
+
+            🗑 Eliminar
+
+        </button>
+
+    `;
+
+    tarjeta
+        .querySelector(".btn-eliminar")
+        .onclick = function () {
+
+            tarjeta.remove();
+
+        };
+
+    document
+        .querySelector(".add-document")
+        .before(tarjeta);
+
+}
+
+async function abrirRevision(radicado){
+
+    localStorage.setItem(
+
+        "radicado",
+
+        radicado
+
+    );
+
+    window.location=
+
+        "detalle_revision.html";
+
+}
+

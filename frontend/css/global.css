@@ -1,0 +1,149 @@
+/* =====================================================
+                ESTILOS GLOBALES
+===================================================== */
+
+*{
+
+    margin:0;
+
+    padding:0;
+
+    box-sizing:border-box;
+
+}
+
+body{
+
+    font-family:Segoe UI,Arial,sans-serif;
+
+    background:var(--color-background);
+
+    color:var(--color-text);
+
+}
+
+/* ============================= */
+
+h1{
+
+    font-size:30px;
+
+    margin-bottom:20px;
+
+}
+
+h2{
+
+    font-size:24px;
+
+    margin-bottom:15px;
+
+}
+
+h3{
+
+    font-size:18px;
+
+}
+
+/* ============================= */
+
+p{
+
+    line-height:1.6;
+
+}
+
+/* ============================= */
+
+a{
+
+    text-decoration:none;
+
+    color:inherit;
+
+}
+
+/* ============================= */
+
+input,
+select,
+textarea{
+
+    width:100%;
+
+    padding:12px;
+
+    border:1px solid var(--color-border);
+
+    border-radius:var(--radius-md);
+
+    margin-top:8px;
+
+    margin-bottom:15px;
+
+    font-size:15px;
+
+    transition:var(--transition);
+
+    outline:none;
+
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+
+    border-color:var(--color-primary);
+
+}
+
+/* ============================= */
+
+button{
+
+    background:var(--color-primary);
+
+    color:var(--color-text);
+
+    border:none;
+
+    padding:12px 24px;
+
+    border-radius:var(--radius-md);
+
+    cursor:pointer;
+
+    font-size:15px;
+
+    transition:var(--transition);
+
+}
+
+button:hover{
+
+    background:var(--color-primary-dark);
+
+}
+
+button:disabled{
+
+    opacity:.5;
+
+    cursor:not-allowed;
+
+}
+
+/* ============================= */
+
+.container{
+
+    width:95%;
+
+    max-width:1400px;
+
+    margin:auto;
+
+    padding:30px;
+
+}
