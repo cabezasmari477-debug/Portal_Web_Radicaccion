@@ -1,14 +1,16 @@
 from fastapi import FastAPI
-from fastapi import UploadFile, File
-from app.schemas.proyecto import Proyecto
-from app.services.radicado_service import generar_radicado
-from app.services.database import radicaciones
-from app.services.documento_service import guardar_documento
-from app.models.estado import EstadoSolicitud
-from app.schemas.actualizar_estado import ActualizarEstado
 from fastapi.middleware.cors import CORSMiddleware
-from app.catalogos.proyectos import TIPOS_PROYECTO
-from app.catalogos.documentos import DOCUMENTOS
+
+from app.routers import (
+    radicaciones,
+    documentos,
+    dashboard,
+    catalogos,
+    auth
+)
+
+from app.routers import revision
+
 
 app = FastAPI()
 
@@ -24,122 +26,19 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(radicaciones.router)
+app.include_router(documentos.router)
+app.include_router(dashboard.router)
+app.include_router(catalogos.router)
+app.include_router(auth.router)
+app.include_router(revision.router)
+
+
 @app.get("/")
 def inicio():
+
     return {
+
         "mensaje": "Portal de Radicación INTECOAL"
+
     }
-@app.post("/radicacion")
-def crear_radicacion(proyecto: Proyecto):
-
-    radicado = generar_radicado()
-
-    nueva_radicacion = {
-        "radicado":radicado,
-        "estado": EstadoSolicitud.RECIBIDO,
-        "proyecto": proyecto.model_dump()
-    }
-
-    radicaciones.append(nueva_radicacion)
-
-    return nueva_radicacion
-
-@app.get("/radicaciones")
-def listar_radicaciones():
-    return radicaciones
-
-@app.get("/radicacion/{radicado}")
-def obtener_radicacion(radicado: str):
-
-    for solicitud in radicaciones:
-
-        if solicitud["radicado"] == radicado:
-            return solicitud
-
-    return {
-        "mensaje": "Radicación no encontrada"
-    }
-
-@app.put("/radicacion/{radicado}/estado")
-def actualizar_estado(
-    radicado: str,
-    datos: ActualizarEstado
-):
-
-    for solicitud in radicaciones:
-
-        if solicitud["radicado"] == radicado:
-
-            solicitud["estado"] = datos.estado
-
-            return {
-                "mensaje": "Estado actualizado correctamente",
-                "radicado": radicado,
-                "estado": datos.estado
-            }
-
-    return {
-        "mensaje": "Radicación no encontrada"
-    }
-
-@app.post("/documentos")
-async def subir_documento(
-    radicado: str,
-    archivo: UploadFile = File(...)
-):
-    contenido = await archivo.read()
-
-    ruta = guardar_documento(
-        radicado,
-        archivo.filename,
-        contenido
-    )
-
-    return {
-    "mensaje": "Documento subido correctamente",
-    "radicado": radicado,
-    "archivo": archivo.filename,
-    "ruta": ruta
-    }
-
-@app.get("/dashboard")
-def dashboard():
-
-    total = len(radicaciones)
-
-    recibidas = sum(
-        1 for r in radicaciones
-        if r["estado"] == EstadoSolicitud.RECIBIDO
-    )
-
-    en_revision = sum(
-        1 for r in radicaciones
-        if r["estado"] == EstadoSolicitud.EN_REVISION
-    )
-
-    aprobadas = sum(
-        1 for r in radicaciones
-        if r["estado"] == EstadoSolicitud.APROBADO
-    )
-
-    rechazadas = sum(
-        1 for r in radicaciones
-        if r["estado"] == EstadoSolicitud.RECHAZADO
-    )
-
-    return {
-        "total": total,
-        "recibidas": recibidas,
-        "en_revision": en_revision,
-        "aprobadas": aprobadas,
-        "rechazadas": rechazadas
-    }
-
-@app.get("/tipos-proyecto")
-def obtener_tipos():
-    return TIPOS_PROYECTO
-
-
-@app.get("/documentos/{tipo}")
-def obtener_documentos(tipo: str):
-    return DOCUMENTOS.get(tipo, [])
