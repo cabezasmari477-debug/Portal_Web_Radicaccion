@@ -1,18 +1,34 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from pathlib import Path
 
 from app.routers import (
     radicaciones,
     documentos,
     dashboard,
     catalogos,
-    auth
+    auth,
+    revision
 )
 
-from app.routers import revision
+app = FastAPI(
+    title="Portal de Radicación INTECOAL",
 
+    description="Sistema para la radicación y revisión de proyectos.",
 
-app = FastAPI()
+    version="1.0.0"
+)
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+UPLOADS = BASE_DIR / "uploads"
+
+app.mount(
+    "/uploads",
+    StaticFiles(directory=UPLOADS),
+    name="uploads"
+)
 
 app.add_middleware(
     CORSMiddleware,

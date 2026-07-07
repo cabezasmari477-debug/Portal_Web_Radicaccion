@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Detalle de Solicitud</title>
+
+    <link rel="stylesheet" href="../../css/variables.css">
+    <link rel="stylesheet" href="../../css/global.css">
+    <link rel="stylesheet" href="../../css/components.css">
+    <link rel="stylesheet" href="../../css/styles.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="revision-header">
+
+        <h1>Detalle de la Solicitud</h1>
+
+        <p>
+            Revise la información del proyecto y los documentos cargados.
+        </p>
+
+    </div>
+
+    <div class="detalle-card">
+
+        <div id="informacionSolicitud"></div>
+
+    </div>
+
+    <br>
+
+    <div class="detalle-card">
+
+        <h2>Documentos</h2>
+
+        <div id="listaDocumentos"></div>
+
+    </div>
+
+    <br>
+
+    <div class="detalle-card">
+
+        <h2>Observaciones</h2>
+
+        <textarea
+            id="observaciones"
+            rows="6"
+            placeholder="Escriba las observaciones de la revisión...">
+        </textarea>
+
+    </div>
+
+    <br>
+
+    <div class="acciones">
+
+        <button
+            class="btn-aprobar"
+            onclick="cambiarEstado('APROBADO')">
+
+            Aprobar
+
+        </button>
+
+        <button
+            class="btn-revision"
+            onclick="cambiarEstado('EN_REVISION')">
+
+            Solicitar Corrección
+
+        </button>
+
+        <button
+            class="btn-rechazar"
+            onclick="cambiarEstado('RECHAZADO')">
+
+            Rechazar
+
+        </button>
+
+    </div>
+
+</div>
+
+<script src="detalle_revision.js"></script>
+
+</body>
+
+</html>

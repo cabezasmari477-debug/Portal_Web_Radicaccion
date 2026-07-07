@@ -20,7 +20,9 @@ def crear_radicacion(proyecto: Proyecto):
 
         "estado": EstadoSolicitud.RECIBIDO,
 
-        "proyecto": proyecto.model_dump()
+        "proyecto": proyecto.model_dump(),
+
+        "documentos": []
 
     }
 

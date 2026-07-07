@@ -1,7 +1,7 @@
-from fastapi import APIRouter
-from fastapi import UploadFile, File, Form
+from fastapi import APIRouter, UploadFile, File, Form
 
 from app.services.documento_service import guardar_documento
+from app.services.database import radicaciones
 
 router = APIRouter(tags=["Documentos"])
 
@@ -29,16 +29,26 @@ async def subir_documento(
 
     )
 
-    return {
-
-        "mensaje": "Documento recibido",
-
-        "radicado": radicado,
+    documento = {
 
         "nombre": nombre,
 
         "archivo": archivo.filename,
 
-        "ruta": ruta
+    }
+
+    for solicitud in radicaciones:
+
+        if solicitud["radicado"] == radicado:
+
+            solicitud["documentos"].append(documento)
+
+            break
+
+    return {
+
+        "mensaje": "Documento recibido",
+
+        "documento": documento
 
     }

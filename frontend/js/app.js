@@ -1,4 +1,4 @@
-const API = "http://127.0.0.1:8000";
+
 
 let documentosProyecto = {
 
@@ -206,7 +206,13 @@ async function subirDocumentos(radicado){
 
     ];
 
+    let cantidad = 0;
+
     for(const documento of todosLosDocumentos){
+
+        if(!documento.archivo){
+            continue;
+        }
 
         const formData = new FormData();
 
@@ -234,11 +240,26 @@ async function subirDocumentos(radicado){
 
         );
 
+        if(!respuesta.ok){
+
+            console.error(
+                "Error subiendo:",
+                documento.nombre
+            );
+
+            continue;
+
+        }
+
         const resultado = await respuesta.json();
 
         console.log(resultado);
 
+        cantidad++;
+
     }
+
+    return cantidad;
 
 }
 

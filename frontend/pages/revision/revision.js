@@ -1,93 +1,150 @@
-const API="http://127.0.0.1:8000";
 
-window.onload=()=>{
 
-cargarSolicitudes();
 
-}
+let solicitudes = [];
+
+window.onload = async () => {
+
+    await cargarSolicitudes();
+
+};
 
 async function cargarSolicitudes(){
 
-const response=
+    try{
 
-await fetch(`${API}/radicaciones`);
+        const response = await fetch(`${API}/radicaciones`);
 
-const datos=
+        solicitudes = await response.json();
 
-await response.json();
+        pintarSolicitudes(solicitudes);
 
-mostrar(datos);
+    }catch(error){
 
-}
+        console.error(error);
 
-function mostrar(datos){
-
-const lista=
-
-document.getElementById("lista");
-
-lista.innerHTML="";
-
-datos.forEach(s=>{
-
-lista.innerHTML+=`
-
-<div class="solicitud">
-
-<div class="info">
-
-<h3>${s.radicado}</h3>
-
-<p>
-
-${s.proyecto.nombre_proyecto}
-
-</p>
-
-<p>
-
-${s.proyecto.municipio}
-
-</p>
-
-<div class="estado">
-
-${s.estado}
-
-</div>
-
-</div>
-
-<div>
-
-<button onclick="abrir('${s.radicado}')">
-
-Revisar
-
-</button>
-
-</div>
-
-</div>
-
-`;
-
-});
+    }
 
 }
 
-function abrir(radicado){
+function pintarSolicitudes(lista){
 
-localStorage.setItem(
+    const contenedor =
+        document.getElementById("listaSolicitudes");
 
-"radicado",
+    contenedor.innerHTML = "";
 
-radicado
+    lista.forEach(solicitud=>{
 
-);
+        contenedor.innerHTML += `
 
-window.location=
+        <div class="solicitud-card">
 
-"detalle.html";
+            <div class="card-header">
+
+                <h2>${solicitud.radicado}</h2>
+
+                <span class="estado">
+
+                    ${solicitud.estado}
+
+                </span>
+
+            </div>
+
+            <div class="card-body">
+
+                <div>
+
+                    <strong>Proyecto</strong>
+
+                    <p>${solicitud.proyecto.nombre_proyecto}</p>
+
+                </div>
+
+                <div>
+
+                    <strong>Municipio</strong>
+
+                    <p>${solicitud.proyecto.municipio}</p>
+
+                </div>
+
+                <div>
+
+                    <strong>Responsable</strong>
+
+                    <p>${solicitud.proyecto.responsable}</p>
+
+                </div>
+
+            </div>
+
+            <div class="card-footer">
+
+                <button
+                    onclick="abrirSolicitud('${solicitud.radicado}')">
+
+                    Revisar solicitud
+
+                </button>
+
+            </div>
+
+        </div>
+
+        `;
+
+    });
+
+}
+
+function abrirSolicitud(radicado){
+
+    localStorage.setItem(
+
+        "radicadoActual",
+
+        radicado
+
+    );
+
+    window.location.href =
+
+        "detalle_revision.html";
+
+}
+
+document
+    .getElementById("buscar")
+    .addEventListener("keyup", buscarSolicitudes);
+
+function buscarSolicitudes(){
+
+    const texto =
+        document
+            .getElementById("buscar")
+            .value
+            .toLowerCase();
+
+    const resultado = solicitudes.filter(s =>
+
+        s.radicado.toLowerCase().includes(texto)
+
+        ||
+
+        s.proyecto.nombre_proyecto.toLowerCase().includes(texto)
+
+        ||
+
+        s.proyecto.municipio.toLowerCase().includes(texto)
+
+        ||
+
+        s.proyecto.responsable.toLowerCase().includes(texto)
+
+    );
+
+    pintarSolicitudes(resultado);
 
 }
