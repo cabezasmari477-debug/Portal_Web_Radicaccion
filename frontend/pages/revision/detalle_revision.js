@@ -87,6 +87,14 @@ function mostrarInformacion(solicitud){
 
     `;
 
+    document.getElementById(
+
+        "observaciones"
+
+    ).value =
+
+        solicitud.observaciones || "";
+
 }
 
 function mostrarDocumentos(documentos){
@@ -134,6 +142,14 @@ function mostrarDocumentos(documentos){
 
 async function cambiarEstado(estado){
 
+    const observaciones =
+
+        document.getElementById(
+
+            "observaciones"
+
+        ).value;
+
     await fetch(
 
         `${API}/radicacion/${radicado}/estado`,
@@ -150,7 +166,9 @@ async function cambiarEstado(estado){
 
             body:JSON.stringify({
 
-                estado
+                estado,
+
+                observaciones
 
             })
 
@@ -158,7 +176,7 @@ async function cambiarEstado(estado){
 
     );
 
-    alert("Estado actualizado correctamente");
+    alert("Solicitud actualizada correctamente.");
 
     location.reload();
 

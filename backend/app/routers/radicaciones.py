@@ -5,6 +5,7 @@ from app.schemas.actualizar_estado import ActualizarEstado
 from app.services.radicado_service import generar_radicado
 from app.services.database import radicaciones
 from app.models.estado import EstadoSolicitud
+from app.schemas.actualizar_revision import ActualizarRevision
 
 router = APIRouter(tags=["Radicaciones"])
 
@@ -22,7 +23,9 @@ def crear_radicacion(proyecto: Proyecto):
 
         "proyecto": proyecto.model_dump(),
 
-        "documentos": []
+        "documentos": [],
+
+        "observaciones": ""
 
     }
 
@@ -58,7 +61,7 @@ def actualizar_estado(
 
     radicado: str,
 
-    datos: ActualizarEstado
+    datos: ActualizarRevision
 
 ):
 
@@ -68,13 +71,17 @@ def actualizar_estado(
 
             solicitud["estado"] = datos.estado
 
+            solicitud["observaciones"] = datos.observaciones
+
             return {
 
                 "mensaje": "Estado actualizado correctamente",
 
                 "radicado": radicado,
 
-                "estado": datos.estado
+                "estado": datos.estado,
+
+                "observaciones": datos.observaciones
 
             }
 
