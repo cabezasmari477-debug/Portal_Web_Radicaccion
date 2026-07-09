@@ -29,19 +29,19 @@ async def subir_documento(
 
     )
 
-    documento = {
-
-        "nombre": nombre,
-
-        "archivo": archivo.filename,
-
-    }
-
     for solicitud in radicaciones:
 
         if solicitud["radicado"] == radicado:
 
-            solicitud["documentos"].append(documento)
+            solicitud["documentos"].append({
+
+                "nombre": nombre,
+
+                "archivo": archivo.filename,
+
+                "ruta": ruta.replace("\\", "/")
+
+            })
 
             break
 
@@ -49,6 +49,12 @@ async def subir_documento(
 
         "mensaje": "Documento recibido",
 
-        "documento": documento
+        "radicado": radicado,
+
+        "nombre": nombre,
+
+        "archivo": archivo.filename,
+
+        "ruta": ruta
 
     }

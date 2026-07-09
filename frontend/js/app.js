@@ -1,4 +1,4 @@
-
+const API = "http://127.0.0.1:8000";
 
 let documentosProyecto = {
 
@@ -49,6 +49,7 @@ async function cargarTiposProyecto() {
 }
 
 async function cargarDocumentos() {
+    console.log("SE EJECUTÓ cargarDocumentos");
 
     const tipo = document.getElementById("tipoProyecto").value;
 
@@ -111,7 +112,8 @@ function prevStep(current){
 
 }
 
-async function generarRadicado() {
+async function generarRadicado(){
+    console.log("Generando radicado...");
 
     const nombreProyecto =
         document.getElementById("nombreProyecto").value;
@@ -125,75 +127,104 @@ async function generarRadicado() {
     const correo =
         document.getElementById("correo").value;
 
-    try {
+    try{
 
         const response = await fetch(
-            `${API}/radicacion`,
-            {
-                method: "POST",
 
-                headers: {
-                    "Content-Type":
-                        "application/json"
+            `${API}/radicacion`,
+
+            {
+
+                method:"POST",
+
+                headers:{
+
+                    "Content-Type":"application/json"
+
                 },
 
                 body: JSON.stringify({
 
-                    nombre_proyecto:
-                        nombreProyecto,
+                    nombre_proyecto: nombreProyecto,
 
-                    municipio:
-                        municipio,
+                    tipo_proyecto:
+                        document.getElementById("tipoProyecto").value,
 
-                    responsable:
-                        responsable,
+                    municipio: municipio,
 
-                    correo:
-                        correo
+                    responsable: responsable,
+
+                    correo: correo
 
                 })
+
             }
+
         );
 
-        const data =
-            await response.json();
-            await subirDocumentos(data.radicado);
+        const data = await response.json();
+
+        await subirDocumentos(data.radicado);
 
         document
-            .getElementById(
-                "resultadoRadicado"
-            )
+            .getElementById("resultadoRadicado")
             .innerHTML =
 
             `
+
             <div class="success">
 
                 <h3>
-                    Solicitud creada
+
+                    ✅ Solicitud creada correctamente
+
                 </h3>
 
                 <p>
-                    Radicado:
+
                     <strong>
-                        ${data.radicado}
+
+                        Radicado:
+
                     </strong>
+
+                    ${data.radicado}
+
                 </p>
 
                 <p>
-                    Estado:
+
+                    <strong>
+
+                        Estado:
+
+                    </strong>
+
                     ${data.estado}
+
                 </p>
 
             </div>
+
             `;
 
+        document
+            .getElementById("resultadoRadicado")
+            .scrollIntoView({
+
+                behavior:"smooth"
+
+            });
+
     }
+
     catch(error){
 
         console.error(error);
 
     }
 
+    console.log("Radicado generado.");
 }
 
 async function subirDocumentos(radicado){
@@ -325,41 +356,69 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-function mostrarDocumentos(documentos) {
+function mostrarDocumentos(documentos){
 
-    const contenedor =
-        document.getElementById("contenedorDocumentos");
+    const lista =
+        document.getElementById("listaDocumentos");
 
-    contenedor.innerHTML = "";
+    lista.innerHTML = "";
 
-    documentos.forEach(doc => {
+    documentos.forEach(doc=>{
 
-        contenedor.innerHTML += `
+        lista.innerHTML += `
 
-        <div class="document-card">
+        <div class="documento-item">
 
-            <h4>📄 ${doc.nombre}</h4>
+            <div>
 
-            <p>
+                📄
 
-                ${
-                    doc.obligatorio
-                    ? "Documento obligatorio"
-                    : "Documento opcional"
-                }
+                <strong>
 
-            </p>
+                    ${doc.nombre}
 
-            <input
-    type="file"
-    accept=".pdf"
-    onchange="guardarDocumentoObligatorio(event,'${doc.nombre}')">
+                </strong>
+
+            </div>
+
+            <button
+                onclick="abrirPdf('${API}/${doc.ruta}')">
+
+                Ver documento
+
+            </button>
 
         </div>
 
         `;
 
     });
+
+}
+
+function abrirPdf(ruta){
+
+    document
+        .getElementById("visorPdf")
+        .src = ruta;
+
+    document
+        .getElementById("modalPdf")
+        .style
+        .display = "flex";
+
+}
+
+function cerrarPdf(){
+
+    document
+        .getElementById("visorPdf")
+        .src = "";
+
+    document
+        .getElementById("modalPdf")
+        .style
+        .display = "none";
 
 }
 
@@ -384,9 +443,7 @@ function guardarDocumentoObligatorio(event, nombreDocumento){
 
         existente.archivo = archivo;
 
-    }
-
-    else{
+    }else{
 
         documentosProyecto.obligatorios.push({
 
@@ -398,17 +455,37 @@ function guardarDocumentoObligatorio(event, nombreDocumento){
 
     }
 
-    console.log(documentosProyecto);
+    const anterior =
+        event.target.parentElement.querySelector(".archivo-seleccionado");
 
+    if(anterior){
 
+        anterior.remove();
 
-    agregarTarjetaNuevoDocumento();
+    }
+
+    event.target.insertAdjacentHTML(
+
+        "afterend",
+
+        `<p class="archivo-seleccionado">✔ ${archivo.name}</p>`
+
+    );
+
+    
 
 }
 
 function agregarTarjetaNuevoDocumento(){
 
+    if(document.querySelector(".add-document")){
+
+        return;
+
+    }
+
     const contenedor =
+
         document.getElementById("contenedorDocumentos");
 
     contenedor.innerHTML += `
@@ -517,41 +594,51 @@ function guardarDocumentoNuevo() {
 
     }
 
-    let documentosProyecto = {
-
-    obligatorios: [],
-
-    adicionales: []
-
-    };
-
     documentosProyecto.adicionales.push({
 
-    nombre: nombre,
+        nombre: nombre,
 
-    archivo: archivo
+        archivo: archivo
 
-});
+    });
 
     document
         .getElementById("nuevoDocumento")
         .remove();
 
-    crearTarjetaDocumento(nombre, archivo.name);
+    document
+        .querySelector(".add-document")
+        ?.remove();
+
+    crearTarjetaDocumento(
+
+        nombre,
+
+        archivo.name
+
+    );
+
+    agregarTarjetaNuevoDocumento();
 
 }
 
-function crearTarjetaDocumento(nombre, archivo) {
+function crearTarjetaDocumento(nombre, archivo){
 
     const tarjeta = document.createElement("div");
 
-    tarjeta.className = "document-card documento-extra";
+    tarjeta.className =
+
+        "document-card documento-extra";
 
     tarjeta.innerHTML = `
 
         <h4>📄 ${nombre}</h4>
 
-        <p>${archivo}</p>
+        <p class="archivo-seleccionado">
+
+            ✔ ${archivo}
+
+        </p>
 
         <button
             class="btn-eliminar">
@@ -564,15 +651,15 @@ function crearTarjetaDocumento(nombre, archivo) {
 
     tarjeta
         .querySelector(".btn-eliminar")
-        .onclick = function () {
+        .onclick = function(){
 
             tarjeta.remove();
 
         };
 
     document
-        .querySelector(".add-document")
-        .before(tarjeta);
+        .getElementById("contenedorDocumentos")
+        .appendChild(tarjeta);
 
 }
 

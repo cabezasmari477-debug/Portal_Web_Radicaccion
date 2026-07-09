@@ -5,6 +5,9 @@
 
     <meta charset="UTF-8">
 
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
     <title>Detalle de Solicitud</title>
 
     <link rel="stylesheet" href="../../css/variables.css">
@@ -16,79 +19,150 @@
 
 <body>
 
-<div class="container">
+<div class="detalle-container">
 
     <div class="revision-header">
 
-        <h1>Detalle de la Solicitud</h1>
+        <div>
 
-        <p>
-            Revise la información del proyecto y los documentos cargados.
-        </p>
+            <h1>Detalle de la Solicitud</h1>
 
-    </div>
+            <p>
 
-    <div class="detalle-card">
+                Revise cuidadosamente la información antes de aprobar o rechazar la solicitud.
 
-        <div id="informacionSolicitud"></div>
+            </p>
 
-    </div>
-
-    <br>
-
-    <div class="detalle-card">
-
-        <h2>Documentos</h2>
-
-        <div id="listaDocumentos"></div>
+        </div>
 
     </div>
 
-    <br>
 
     <div class="detalle-card">
 
-        <h2>Observaciones</h2>
+        <h2>
+
+            Información General
+
+        </h2>
+
+        <div id="informacionSolicitud">
+
+        </div>
+
+    </div>
+
+
+    <div class="detalle-card">
+
+        <h2>
+
+            Documentos Adjuntos
+
+        </h2>
+
+        <div
+            id="listaDocumentos"
+            class="lista-documentos">
+
+        </div>
+
+    </div>
+
+
+    <div class="detalle-card">
+
+        <h2>
+
+            Observaciones del Revisor
+
+        </h2>
 
         <textarea
+
             id="observaciones"
-            rows="6"
-            placeholder="Escriba las observaciones de la revisión...">
+
+            rows="7"
+
+            placeholder="Ingrese aquí las observaciones técnicas de la revisión...">
+
         </textarea>
 
     </div>
 
-    <br>
 
     <div class="acciones">
 
         <button
+
             class="btn-aprobar"
+
             onclick="cambiarEstado('APROBADO')">
 
-            Aprobar
+            ✔ Aprobar
 
         </button>
 
         <button
+
             class="btn-revision"
+
             onclick="cambiarEstado('EN_REVISION')">
 
-            Solicitar Corrección
+            ✏ Solicitar Corrección
 
         </button>
 
         <button
+
             class="btn-rechazar"
+
             onclick="cambiarEstado('RECHAZADO')">
 
-            Rechazar
+            ✖ Rechazar
 
         </button>
 
     </div>
 
 </div>
+
+<!-- VISOR PDF -->
+
+<div id="modalPdf" class="modal-pdf">
+
+    <div class="modal-contenido">
+
+        <div class="modal-header">
+
+            <h2>
+
+                Documento
+
+            </h2>
+
+            <button onclick="cerrarPdf()">
+
+                ✕
+
+            </button>
+
+        </div>
+
+        <iframe
+
+            id="visorPdf"
+
+            src=""
+
+            frameborder="0">
+
+        </iframe>
+
+    </div>
+
+</div>
+
 
 <script src="detalle_revision.js"></script>
 

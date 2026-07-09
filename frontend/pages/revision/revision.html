@@ -4,6 +4,7 @@
 <head>
 
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Panel de Revisión</title>
 
@@ -20,15 +21,57 @@
 
     <div class="revision-header">
 
-        <h1>Panel de Revisión Técnica</h1>
+        <div>
 
-        <p>
-            Administre las solicitudes radicadas por los contratistas.
-        </p>
+            <h1>Panel de Revisión Técnica</h1>
+
+            <p>
+                Administre las solicitudes radicadas por los contratistas.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="revision-stats">
+
+        <div class="stat-card">
+
+            <span>Total</span>
+
+            <h2 id="totalSolicitudes">0</h2>
+
+        </div>
+
+        <div class="stat-card">
+
+            <span>Recibidas</span>
+
+            <h2 id="totalRecibidas">0</h2>
+
+        </div>
+
+        <div class="stat-card">
+
+            <span>En revisión</span>
+
+            <h2 id="totalRevision">0</h2>
+
+        </div>
+
+        <div class="stat-card">
+
+            <span>Aprobadas</span>
+
+            <h2 id="totalAprobadas">0</h2>
+
+        </div>
 
     </div>
 
     <div class="busqueda">
+
+        <span class="search-icon">🔍</span>
 
         <input
             type="text"
@@ -37,15 +80,16 @@
 
     </div>
 
-    <div id="listaSolicitudes"
-         class="lista-solicitudes">
+    <div
+        id="listaSolicitudes"
+        class="lista-solicitudes">
 
     </div>
 
 </div>
 
+<script src="../../js/config.js"></script>
 <script src="revision.js"></script>
 
 </body>
-
 </html>

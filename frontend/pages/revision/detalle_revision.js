@@ -1,4 +1,4 @@
-
+const API = "http://127.0.0.1:8000";
 
 const radicado =
     localStorage.getItem("radicadoActual");
@@ -33,57 +33,65 @@ function mostrarInformacion(solicitud){
         .getElementById("informacionSolicitud")
         .innerHTML = `
 
-        <h2>${solicitud.radicado}</h2>
+        <h2>
 
-        <p>
+            ${solicitud.radicado}
 
-            <strong>Estado:</strong>
+        </h2>
 
-            ${solicitud.estado}
+        <br>
 
-        </p>
+        <div class="info-grid">
 
-        <hr>
+            <div class="info-box">
 
-        <p>
+                <strong>Estado</strong>
 
-            <strong>Proyecto:</strong>
+                <span>${solicitud.estado}</span>
 
-            ${solicitud.proyecto.nombre_proyecto}
+            </div>
 
-        </p>
+            <div class="info-box">
 
-        <p>
+                <strong>Proyecto</strong>
 
-            <strong>Tipo:</strong>
+                <span>${solicitud.proyecto.nombre_proyecto}</span>
 
-            ${solicitud.proyecto.tipo_proyecto}
+            </div>
 
-        </p>
+            <div class="info-box">
 
-        <p>
+                <strong>Tipo</strong>
 
-            <strong>Municipio:</strong>
+                <span>${solicitud.proyecto.tipo_proyecto}</span>
 
-            ${solicitud.proyecto.municipio}
+            </div>
 
-        </p>
+            <div class="info-box">
 
-        <p>
+                <strong>Municipio</strong>
 
-            <strong>Responsable:</strong>
+                <span>${solicitud.proyecto.municipio}</span>
 
-            ${solicitud.proyecto.responsable}
+            </div>
 
-        </p>
+            <div class="info-box">
 
-        <p>
+                <strong>Responsable</strong>
 
-            <strong>Correo:</strong>
+                <span>${solicitud.proyecto.responsable}</span>
 
-            ${solicitud.proyecto.correo}
+            </div>
 
-        </p>
+            <div class="info-box">
+
+                <strong>Correo</strong>
+
+                <span>${solicitud.proyecto.correo}</span>
+
+            </div>
+
+        </div>
 
     `;
 
@@ -114,23 +122,21 @@ function mostrarDocumentos(documentos){
 
                 📄
 
-                <strong>
+                <strong>${doc.nombre}</strong>
 
-                    ${doc.nombre}
+                <br>
 
-                </strong>
+                <small>${doc.archivo}</small>
 
             </div>
 
-            <a
+            <button
 
-                href="${API}/${doc.ruta}"
-
-                target="_blank">
+                onclick="abrirPdf('${API}/${doc.ruta}')">
 
                 Ver documento
 
-            </a>
+            </button>
 
         </div>
 
