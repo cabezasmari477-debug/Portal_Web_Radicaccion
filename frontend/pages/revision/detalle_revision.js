@@ -24,7 +24,7 @@ async function cargarSolicitud(){
     mostrarInformacion(solicitud);
 
     mostrarDocumentos(solicitud.documentos);
-
+    cargarHistorial();    
 }
 
 function mostrarInformacion(solicitud){
@@ -185,5 +185,74 @@ async function cambiarEstado(estado){
     alert("Solicitud actualizada correctamente.");
 
     location.reload();
+
+}
+
+async function cargarHistorial(){
+
+    const response = await fetch(
+
+        `${API}/historial/${radicado}`
+
+    );
+
+    const historial = await response.json();
+
+    mostrarHistorial(historial);
+
+}
+
+
+function mostrarHistorial(historial){
+
+    const contenedor =
+
+        document.getElementById(
+
+            "timelineHistorial"
+
+        );
+
+    contenedor.innerHTML = "";
+
+    historial.forEach(item=>{
+
+        contenedor.innerHTML += `
+
+        <div class="timeline-item">
+
+            <div class="timeline-icon">
+
+                ✔
+
+            </div>
+
+            <div class="timeline-content">
+
+                <h4>
+
+                    ${item.evento}
+
+                </h4>
+
+                <small>
+
+                    ${item.fecha}
+
+                </small>
+
+                <p>
+
+                    ${item.usuario}
+
+                </p>
+
+            </div>
+
+        </div>
+
+        `;
+
+    });
 
 }

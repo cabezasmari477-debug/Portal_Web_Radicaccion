@@ -980,3 +980,79 @@ textarea{
     flex:1;
 
 }
+
+
+   /*TIMELINE*/
+
+
+.timeline-item{
+
+    display:flex;
+
+    gap:20px;
+
+    margin-bottom:25px;
+
+    align-items:flex-start;
+
+}
+
+.timeline-icon{
+
+    width:45px;
+
+    height:45px;
+
+    border-radius:50%;
+
+    background:var(--primary);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-weight:bold;
+
+    font-size:18px;
+
+    flex-shrink:0;
+
+}
+
+.timeline-content{
+
+    background:white;
+
+    border-left:4px solid var(--primary);
+
+    padding:15px 20px;
+
+    border-radius:12px;
+
+    width:100%;
+
+    box-shadow:0 4px 12px rgba(0,0,0,.05);
+
+}
+
+.timeline-content h4{
+
+    margin-bottom:6px;
+
+}
+
+.timeline-content small{
+
+    color:#777;
+
+}
+
+.timeline-content p{
+
+    margin-top:10px;
+
+    color:#555;
+
+}
