@@ -1,11 +1,14 @@
+from datetime import datetime
 from fastapi import APIRouter
-
 from app.schemas.proyecto import Proyecto
-from app.schemas.actualizar_estado import ActualizarEstado
-from app.services.radicado_service import generar_radicado
-from app.services.database import radicaciones
-from app.models.estado import EstadoSolicitud
 from app.schemas.actualizar_revision import ActualizarRevision
+from app.models.estado import EstadoSolicitud
+from app.services.database import (
+    radicaciones,
+    historial
+)
+from app.services.radicado_service import generar_radicado
+from app.services.historial_service import registrar_evento
 
 router = APIRouter(tags=["Radicaciones"])
 
@@ -21,6 +24,8 @@ def crear_radicacion(proyecto: Proyecto):
 
         "estado": EstadoSolicitud.RECIBIDO,
 
+        "fecha_creacion": datetime.now().strftime("%d/%m/%Y %H:%M"),
+
         "proyecto": proyecto.model_dump(),
 
         "documentos": [],
@@ -31,14 +36,32 @@ def crear_radicacion(proyecto: Proyecto):
 
     radicaciones.append(nueva_radicacion)
 
-    return nueva_radicacion
+    registrar_evento(
 
+        radicado,
+
+        "Solicitud creada"
+
+    )
+
+    historial.append({
+
+        "radicado": radicado,
+
+        "fecha": datetime.now().strftime("%d/%m/%Y %H:%M"),
+
+        "accion": "Radicación creada",
+
+        "estado": EstadoSolicitud.RECIBIDO
+
+    })
+
+    return nueva_radicacion
 
 @router.get("/radicaciones")
 def listar_radicaciones():
 
     return radicaciones
-
 
 @router.get("/radicacion/{radicado}")
 def obtener_radicacion(radicado: str):
@@ -70,8 +93,27 @@ def actualizar_estado(
         if solicitud["radicado"] == radicado:
 
             solicitud["estado"] = datos.estado
+            registrar_evento(
+
+                radicado,
+
+                f"Estado cambiado a {datos.estado}"
+
+            )
 
             solicitud["observaciones"] = datos.observaciones
+
+            historial.append({
+
+                "radicado": radicado,
+
+                "fecha": datetime.now().strftime("%d/%m/%Y %H:%M"),
+
+                "accion": "Cambio de estado",
+
+                "estado": datos.estado
+
+            })
 
             return {
 
@@ -90,3 +132,17 @@ def actualizar_estado(
         "mensaje": "Radicación no encontrada"
 
     }
+
+
+@router.get("/radicacion/{radicado}/historial")
+def obtener_historial(radicado: str):
+
+    return [
+
+        evento
+
+        for evento in historial
+
+        if evento["radicado"] == radicado
+
+    ]

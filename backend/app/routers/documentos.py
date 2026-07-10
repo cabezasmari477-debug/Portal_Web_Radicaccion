@@ -1,6 +1,6 @@
 from fastapi import APIRouter, UploadFile, File, Form
-
 from app.services.documento_service import guardar_documento
+from app.services.historial_service import registrar_evento
 from app.services.database import radicaciones
 
 router = APIRouter(tags=["Documentos"])
@@ -19,13 +19,19 @@ async def subir_documento(
 
     contenido = await archivo.read()
 
-    ruta = guardar_documento(
+    documento = guardar_documento(
+
+        radicado=radicado,
+        nombre_archivo=archivo.filename,
+        contenido=contenido
+
+    )
+
+    registrar_evento(
 
         radicado,
 
-        archivo.filename,
-
-        contenido
+        f"Documento cargado: {nombre}"
 
     )
 
@@ -36,10 +42,8 @@ async def subir_documento(
             solicitud["documentos"].append({
 
                 "nombre": nombre,
-
-                "archivo": archivo.filename,
-
-                "ruta": ruta.replace("\\", "/")
+                "archivo": documento["archivo"],
+                "ruta": documento["ruta"]
 
             })
 
@@ -47,14 +51,8 @@ async def subir_documento(
 
     return {
 
-        "mensaje": "Documento recibido",
+        "mensaje": "Documento cargado correctamente",
 
-        "radicado": radicado,
-
-        "nombre": nombre,
-
-        "archivo": archivo.filename,
-
-        "ruta": ruta
+        "documento": documento
 
     }

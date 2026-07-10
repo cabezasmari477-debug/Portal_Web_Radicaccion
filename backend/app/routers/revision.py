@@ -1,67 +1,79 @@
 from fastapi import APIRouter
 
-from app.schemas.revision import Revision
-from app.services.revision_service import (
-    crear_revision,
-    listar_revisiones,
-    obtener_revision,
-    actualizar_revision
-)
-
-router = APIRouter(tags=["Revisiones"])
+from app.services.database import radicaciones
 
 
-@router.post("/revisiones")
-def crear(datos: Revision):
+router = APIRouter(tags=["Revisión"])
 
-    return crear_revision(datos)
+@router.get("/revision")
 
+def obtener_solicitudes():
 
-@router.get("/revisiones")
-def listar():
-
-    return listar_revisiones()
+    return radicaciones
 
 
-@router.get("/revisiones/{radicado}")
-def obtener(radicado: str):
+@router.get("/revision/{radicado}")
 
-    revision = obtener_revision(radicado)
+def obtener_revision(radicado: str):
 
-    if revision:
+    for solicitud in radicaciones:
 
-        return revision
+        if solicitud["radicado"] == radicado:
+
+            return solicitud
 
     return {
 
-        "mensaje": "No encontrada"
+        "mensaje": "Solicitud no encontrada"
 
     }
 
 
-@router.put("/revisiones/{radicado}")
-def actualizar(
+@router.get("/revision/estado/{estado}")
 
-    radicado: str,
+def filtrar_estado(estado: str):
 
-    datos: Revision
+    return [
 
-):
+        solicitud
 
-    revision = actualizar_revision(
+        for solicitud in radicaciones
 
-        radicado,
+        if solicitud["estado"] == estado
 
-        datos
+    ]
 
-    )
 
-    if revision:
+@router.get("/revision/buscar/{texto}")
 
-        return revision
+def buscar(texto: str):
 
-    return {
+    texto = texto.lower()
 
-        "mensaje": "No encontrada"
+    resultados = []
 
-    }
+    for solicitud in radicaciones:
+
+        proyecto = solicitud["proyecto"]
+
+        if (
+
+            texto in solicitud["radicado"].lower()
+
+            or
+
+            texto in proyecto["nombre_proyecto"].lower()
+
+            or
+
+            texto in proyecto["municipio"].lower()
+
+            or
+
+            texto in proyecto["responsable"].lower()
+
+        ):
+
+            resultados.append(solicitud)
+
+    return resultados

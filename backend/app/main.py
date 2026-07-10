@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
-
+from app.routers import historial
 from app.routers import (
     radicaciones,
     documentos,
@@ -48,6 +48,7 @@ app.include_router(dashboard.router)
 app.include_router(catalogos.router)
 app.include_router(auth.router)
 app.include_router(revision.router)
+app.include_router(historial.router)
 
 
 @app.get("/")
