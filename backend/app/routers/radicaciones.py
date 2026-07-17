@@ -3,10 +3,8 @@ from fastapi import APIRouter
 from app.schemas.proyecto import Proyecto
 from app.schemas.actualizar_revision import ActualizarRevision
 from app.models.estado import EstadoSolicitud
-from app.services.database import (
-    radicaciones,
-    historial
-)
+from app.services.database import radicaciones
+
 from app.services.radicado_service import generar_radicado
 from app.services.historial_service import registrar_evento
 
@@ -43,18 +41,6 @@ def crear_radicacion(proyecto: Proyecto):
         "Solicitud creada"
 
     )
-
-    historial.append({
-
-        "radicado": radicado,
-
-        "fecha": datetime.now().strftime("%d/%m/%Y %H:%M"),
-
-        "accion": "Radicación creada",
-
-        "estado": EstadoSolicitud.RECIBIDO
-
-    })
 
     return nueva_radicacion
 
@@ -94,26 +80,12 @@ def actualizar_estado(
 
             solicitud["estado"] = datos.estado
             registrar_evento(
-
                 radicado,
-
-                f"Estado cambiado a {datos.estado}"
-
+                f"Solicitud {datos.estado}",
+                "Revisor Técnico"
             )
 
             solicitud["observaciones"] = datos.observaciones
-
-            historial.append({
-
-                "radicado": radicado,
-
-                "fecha": datetime.now().strftime("%d/%m/%Y %H:%M"),
-
-                "accion": "Cambio de estado",
-
-                "estado": datos.estado
-
-            })
 
             return {
 
