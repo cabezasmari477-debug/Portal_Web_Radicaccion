@@ -14,12 +14,12 @@ DOCUMENTOS = {
         {
             "id": 3,
             "nombre": "Pararrayos Gamma",
-            "obligatorio": False
+            "obligatorio": True
         },
         {
             "id": 4,
             "nombre": "Postes de Concreto",
-            "obligatorio": False
+            "obligatorio": True
         }
     ],
 

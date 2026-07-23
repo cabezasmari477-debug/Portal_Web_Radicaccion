@@ -129,6 +129,42 @@ async function generarRadicado(){
 
     try{
 
+        const tipoProyecto =
+            document.getElementById("tipoProyecto").value;
+
+        const respuesta =
+            await fetch(`${API}/documentos/${encodeURIComponent(tipoProyecto)}`);
+
+        const documentos =
+            await respuesta.json();
+
+        const obligatorios =
+            documentos.filter(d => d.obligatorio);
+
+        const faltantes = obligatorios.filter(doc =>
+
+            !documentosProyecto.obligatorios.some(
+
+                archivo => archivo.nombre === doc.nombre
+
+            )
+
+        );
+
+        if(faltantes.length > 0){
+
+            alert(
+
+                "Faltan documentos obligatorios:\n\n" +
+
+                faltantes.map(d=>"• "+d.nombre).join("\n")
+
+            );
+
+            return;
+
+        }
+
         const response = await fetch(
 
             `${API}/radicacion`,
@@ -358,41 +394,43 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function mostrarDocumentos(documentos){
 
-    const lista =
-        document.getElementById("listaDocumentos");
+    const lista = document.getElementById("contenedorDocumentos");
+
+    if(!lista){
+        console.error("No existe contenedorDocumentos");
+        return;
+    }
 
     lista.innerHTML = "";
+
+    documentosProyecto.obligatorios = [];
 
     documentos.forEach(doc=>{
 
         lista.innerHTML += `
 
-        <div class="documento-item">
+        <div class="document-card">
 
-            <div>
+            <h4>${doc.nombre}</h4>
 
-                📄
+            <p>
 
-                <strong>
+                ${doc.obligatorio ? "Obligatorio" : "Opcional"}
 
-                    ${doc.nombre}
+            </p>
 
-                </strong>
-
-            </div>
-
-            <button
-                onclick="abrirPdf('${API}/${doc.ruta}')">
-
-                Ver documento
-
-            </button>
+            <input
+                type="file"
+                accept=".pdf"
+                onchange="guardarDocumentoObligatorio(event,'${doc.nombre}')">
 
         </div>
 
         `;
 
     });
+
+    agregarTarjetaNuevoDocumento();
 
 }
 

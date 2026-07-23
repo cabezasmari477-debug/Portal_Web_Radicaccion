@@ -96,6 +96,12 @@ def obtener_dashboard():
 
                 solicitud["proyecto"]["municipio"],
 
+            "responsable":
+                solicitud["proyecto"]["responsable"],
+
+            "tipo":
+                solicitud["proyecto"]["tipo_proyecto"],
+
             "estado":
 
                 solicitud["estado"],
