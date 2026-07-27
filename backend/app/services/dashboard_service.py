@@ -84,37 +84,17 @@ def obtener_dashboard():
 
         ultimas.append({
 
-            "radicado":
+            "radicado": solicitud["radicado"],
 
-                solicitud["radicado"],
+            "proyecto": solicitud["proyecto"]["nombre_proyecto"],
 
-            "proyecto":
+            "municipio": solicitud["proyecto"]["municipio"],
 
-                solicitud["proyecto"]["nombre_proyecto"],
+            "responsable": solicitud["proyecto"]["responsable"],
 
-            "municipio":
+            "estado": solicitud["estado"],
 
-                solicitud["proyecto"]["municipio"],
-
-            "responsable":
-                solicitud["proyecto"]["responsable"],
-
-            "tipo":
-                solicitud["proyecto"]["tipo_proyecto"],
-
-            "estado":
-
-                solicitud["estado"],
-
-            "fecha":
-
-                solicitud.get(
-
-                    "fecha_creacion",
-
-                    ""
-
-                )
+            "fecha": solicitud.get("fecha_creacion", "")
 
         })
 
