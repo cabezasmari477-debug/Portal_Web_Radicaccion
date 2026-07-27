@@ -717,3 +717,62 @@ async function abrirRevision(radicado){
 
 }
 
+function nuevaSolicitud() {
+
+    if(!confirm("¿Desea iniciar una nueva solicitud? Se perderá la información no guardada.")){
+        return;
+    }
+
+    // Limpiar todos los campos
+    document.getElementById("nombreProyecto").value = "";
+    document.getElementById("tipoProyecto").selectedIndex = 0;
+    document.getElementById("municipio").value = "";
+    document.getElementById("responsable").value = "";
+    document.getElementById("correo").value = "";
+    document.getElementById("telefono").value = "";
+
+    // Vaciar documentos
+    documentosProyecto = {
+        obligatorios: [],
+        adicionales: []
+    };
+
+    const contenedor = document.getElementById("contenedorDocumentos");
+
+    if(contenedor){
+        contenedor.innerHTML = "";
+    }
+
+    // Limpiar resumen
+    const resumen = document.getElementById("resumenSolicitud");
+
+    if(resumen){
+        resumen.innerHTML = "";
+    }
+
+    // Limpiar resultado
+    const resultado = document.getElementById("resultadoRadicado");
+
+    if(resultado){
+        resultado.innerHTML = "";
+    }
+
+    // Volver al paso 1
+    document.querySelectorAll(".form-step").forEach(step=>{
+        step.classList.remove("active-step");
+    });
+
+    document.getElementById("step1").classList.add("active-step");
+
+    // Reiniciar círculos
+    document.querySelectorAll(".step").forEach(c=>{
+        c.classList.remove("active");
+    });
+
+    document.getElementById("circle1").classList.add("active");
+
+    updateProgress(1);
+    cargarDocumentos();
+    cargarResumen();
+
+}
